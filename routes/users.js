@@ -1,9 +1,67 @@
 const { generateToken, verifyToken } = require('../middlewares/authMiddleware');
-const users = require('../data/users');  // Importar los usuarios
+const users = require('../data/users');  
 
 const setup = (app) => {
-  // para mostrar el formulario de inicio de sesión
   app.get('/', (req, res) => {
+    // verificar si el usuario ya ha iniciado sesión
+    if (req.session.token) {
+      const dashboardPage = `
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Inicio</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 0;
+            }
+            .login-container {
+                background-color: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                max-width: 400px;
+                width: 100%;
+                text-align: center;
+            }
+            button {
+                width: 100%;
+                background-color: #444444;
+                color: white;
+                padding: 5px;
+                border: none;
+                border-radius: 4px;
+                font-size: 16px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+            a.dashboard-link {
+                display: block;
+                margin-top: 20px;
+                color: #007bff;
+                text-decoration: none;
+            }
+        </style>
+      </head>
+      <body>
+        <div class="login-container">
+          <h2>Ya has iniciado sesión</h2>
+          <a href="/dashboard" class="dashboard-link">Ir al Dashboard</a>
+          <form action="/logout" method="post">
+            <button type="submit">Cerrar sesión</button>
+          </form>
+        </div>
+      </body>
+      </html>
+      `;
+      res.send(dashboardPage);
+    } else { // si no hay sesión iniciada, se muestra el formulario
     const loginform = `
     <!DOCTYPE html>
     <html lang="es">
@@ -41,10 +99,10 @@ const setup = (app) => {
                 width: 100%;
                 background-color: #444444;
                 color: white;
-                padding: 0.75rem;
+                padding: 5px;
                 border: none;
                 border-radius: 4px;
-                font-size: 1rem;
+                font-size: 16px;
                 cursor: pointer;
             }
             .dashboard-link {
@@ -73,13 +131,14 @@ const setup = (app) => {
     </html>
     `;
     res.send(loginform);
+    }
   });
 
-  // para autenticar al usuario y generar un token JWT
+  // autenticar al usuario y generar un token JWT
   app.post('/login', (req, res) => {
     const { username, password } = req.body;
 
-    // Buscar al usuario en el array
+    // buscar al usuario en el array
     const user = users.find(u => u.username === username && u.password === password);
 
     if (user) {
@@ -121,21 +180,22 @@ const setup = (app) => {
                 width: 100%;
                 text-align: center;
             }
-            h1 {
+          h1 {
                 color: #333;
             }
-            p {
+          p {
                 color: #555;
             }
-                .logout-btn {
-                background-color: #dc3545;
+          .logout-btn {
+                width: 100%;
+                background-color: #444444;
                 color: white;
-                padding: 0.75rem 1.5rem;
+                padding: 5px;
                 border: none;
                 border-radius: 4px;
-                font-size: 1rem;
+                font-size: 16px;
                 cursor: pointer;
-                margin-top: 1.5rem;
+                margin-top: 10px;
             }
             .home-link{
                 display: block;

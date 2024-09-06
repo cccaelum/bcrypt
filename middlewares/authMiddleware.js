@@ -8,7 +8,7 @@ function generateToken(user) {
 }
 
 function verifyToken(req, res, next) {
-  const token = req.session.token; // Tomar el token de la sesión
+  const token = req.session.token; 
   if (!token) {
     return res.status(401).json({ mensaje: 'Token no generado' });
   }
@@ -17,7 +17,7 @@ function verifyToken(req, res, next) {
     if (err) {
       return res.status(401).json({ mensaje: 'Token inválido o expirado' });
     }
-    req.user = decoded.user; // Almacenar la información decodificada
+    req.user = decoded.user; // almacenar el payload
     next(); 
   });
 }
