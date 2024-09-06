@@ -20,7 +20,7 @@ app.use(
   })
 );
 
-// configura las rutas de usuarios
+// configura las rutas
 routes(app); 
 
 
