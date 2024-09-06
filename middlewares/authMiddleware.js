@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
+const { secret } = require('../crypto/config'); 
 
 function generateToken(user) {
-  return jwt.sign({ user: user.id }, 'tu_secreto_es_secreto', {
+  return jwt.sign({ user: user.id }, secret, {
     expiresIn: '1h',
   });
 }
@@ -12,7 +13,7 @@ function verifyToken(req, res, next) {
     return res.status(401).json({ mensaje: 'Token no generado' });
   }
 
-  jwt.verify(token, 'tu_secreto_es_secreto', (err, decoded) => {
+  jwt.verify(token, secret, (err, decoded) => {
     if (err) {
       return res.status(401).json({ mensaje: 'Token inválido o expirado' });
     }
