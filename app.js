@@ -1,6 +1,6 @@
 const express = require('express');
 const session = require('express-session');
-const { secret } = require('./crypto/config');  
+const { hashedSecret } = require('./crypto/config');  
 
 const routes = require('./routes/users');
 
@@ -13,7 +13,7 @@ app.use(express.json());
 
 app.use(
   session({
-    secret: secret,
+    secret: hashedSecret,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }, 
